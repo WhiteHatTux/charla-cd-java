@@ -7,5 +7,7 @@ public interface MathService {
 
   Integer add(Integer first, Integer second);
 
+  Long countCalculations();
+
   Integer multiply(Integer first, Integer second);
 }

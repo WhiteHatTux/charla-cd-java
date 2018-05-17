@@ -24,6 +24,11 @@ public class MathController {
     return mathService.add(first, second);
   }
 
+  @RequestMapping(value = "/count", method = RequestMethod.GET)
+  public Long count() {
+    return mathService.countCalculations();
+  }
+
   @RequestMapping(value = "/multiply", method = RequestMethod.GET)
   public Integer multiply(@RequestParam Integer first, @RequestParam Integer second) {
     return mathService.multiply(first, second);

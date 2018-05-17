@@ -4,19 +4,30 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
     }
+}
+
+plugins {
+    id 'com.palantir.git-version' version '0.7.3'
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+// docker image creation
+apply plugin: 'com.palantir.docker'
+apply plugin: "com.palantir.git-version"
 
 group = 'de.ctimm'
-version = '0.0.1-SNAPSHOT'
+version = gitVersion()
 sourceCompatibility = 1.8
 
 repositories {
@@ -30,7 +41,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
 
     //compile('org.liquibase:liquibase-core')
-    compile('com.h2database:h2')
+    testCompile('com.h2database:h2')
+    compile('org.mariadb.jdbc:mariadb-java-client:1.5.7')
 
     def swaggerVersion = '2.7.0'
     compile('io.springfox:springfox-swagger2:' + swaggerVersion)
@@ -39,4 +51,16 @@ dependencies {
     runtime('org.springframework.boot:spring-boot-devtools')
     compileOnly('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+docker {
+    name "295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-demo:" + jar.version
+    files jar.archivePath
+    buildArgs(['JAR_FILE': "${jar.archiveName}",])
+}
+
+task versionTxt() {
+    doLast {
+        new File("$buildDir/version.txt").text = gitVersion()
+    }
 }
