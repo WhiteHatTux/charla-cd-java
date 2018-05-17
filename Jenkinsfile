@@ -2,7 +2,9 @@ pipeline {
   agent any
   stages {
     stage('clean'){
-      deleteDir()
+      steps {
+        deleteDir()
+      }
     }
     stage('Build') {
       steps {
