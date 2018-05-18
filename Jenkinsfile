@@ -54,9 +54,7 @@ pipeline {
       steps {
         sh 'chmod +x ${WORKSPACE}/scripts/remove-service.sh'
         sh '${WORKSPACE}/scripts/deploy.sh dev deploy'
-        sh 'echo wait 100 seconds for server to come up'
-        sh 'sleep 100'
-        sh '''
+        sh '''set +e
             count=0
             healthSuccess=0
             while [ $count -le 7 ]
