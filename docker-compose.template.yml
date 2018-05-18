@@ -7,7 +7,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 20s
-      retries: 2
+      retries: 3
 
 # Here we use the real image. For development purposes this will be overwritten with "nginx-charla:latest", because it won't create problems with
 # access to AWS repository
