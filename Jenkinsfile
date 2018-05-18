@@ -68,7 +68,6 @@ pipeline {
                 apisuccess=`echo $?`
                 if [[ $apisuccess -eq 0 ]]; then
                     healthSuccess=1
-                    ${WORKSPACE}/scripts/remove-service.sh
                     echo server was not up after 100 seconds, something went wrong
                     break;
                 fi
