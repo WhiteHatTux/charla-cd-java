@@ -57,7 +57,7 @@ pipeline {
         sh '''set +e
             count=0
             healthSuccess=0
-            while [ $count -le 7 ]
+            while [ $count -le 15 ]
             do
                 count=$(( $count +1 ))
                 sleep 5
