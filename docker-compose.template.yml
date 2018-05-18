@@ -11,12 +11,9 @@ services:
 
 # Here we use the real image. For development purposes this will be overwritten with "nginx-charla:latest", because it won't create problems with
 # access to AWS repository
-  web:
-    image: 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:latest
-    volumes:
-      - /etc/letsencrypt:/config/ssl
+  web_nossl:
+    image: 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:REPLACE_APP_IMAGE
     depends_on:
       - app
     ports:
       - 80:80
-      - 443:443

@@ -46,6 +46,8 @@ pipeline {
           steps {
             sh 'cd nginx-build; docker build -t 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:$(cat ${WORKSPACE}/build/version.txt) .'
             sh 'docker push 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:$(cat ${WORKSPACE}/build/version.txt)'
+            sh 'cd nginx-build/nginx-prod-extension/; docker build -t 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx-ssl:$(cat ${WORKSPACE}/build/version.txt) .'
+            sh 'docker push 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx-ssl:$(cat ${WORKSPACE}/build/version.txt)'
           }
         }
       }
