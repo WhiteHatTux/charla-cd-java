@@ -25,6 +25,7 @@ pushd build/to-deploy
 . ./env
 sed -i "s/REPLACE_DB_HOST/$REPLACE_DB_HOST/g" docker-compose.yml
 sed -i "s/REPLACE_DB_PASSWORD/$REPLACE_DB_PASSWORD/g" docker-compose.yml
+sed -i "s/REPLACE_APP_IMAGE/$(cat ../version.txt)/g" docker-compose.yml
 
 echo $action
 if [[ ! "$action" = "deploy" ]]; then
