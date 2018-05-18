@@ -79,7 +79,7 @@ pipeline {
                 echo "could not get success on master health"
                 docker service logs charlacd_db
                 docker service logs charlacd_app
-                docker service logs charlacd_web
+                docker service logs charlacd_web_nossl
                 ${WORKSPACE}/scripts/remove-service.sh || echo some errors stopping the services
                 exit 1
             fi

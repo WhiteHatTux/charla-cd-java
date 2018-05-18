@@ -1,2 +1,2 @@
-REPLACE_DB_HOST=charla-cd.cscukg4jstky.eu-central-1.rds.amazonaws.com
+REPLACE_DB_HOST=charla-cd-2.cscukg4jstky.eu-central-1.rds.amazonaws.com
 REPLACE_DB_PASSWORD=charlaPassword
