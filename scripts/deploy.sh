@@ -37,11 +37,11 @@ fi
 if [[ "$env" = "prod" ]] ; then
     prod=172.31.29.244
     # copy docker-compose to prod
-    scp docker-compose.yml centos@"$prod":/home/centos/deploy
+    scp -o StrictHostKeyChecking=no docker-compose.yml centos@"$prod":/home/centos/deploy
     # login to aws registry on prod server
-    ssh centos@"$prod" '$(aws ecr get-login --no-include-email)'
+    ssh -o StrictHostKeyChecking=no centos@"$prod" '$(aws ecr get-login --no-include-email)'
     # run on prod server
-    ssh centos@"$prod" docker stack deploy --compose-file=/home/centos/deploy/docker-compose.yml charlacd
+    ssh -o StrictHostKeyChecking=no centos@"$prod" docker stack deploy --compose-file=/home/centos/deploy/docker-compose.yml charlacd
 elif [[ "$env" = "dev" ]]; then
     pushd ../../nginx-build
         docker build -t nginx-charla:latest .

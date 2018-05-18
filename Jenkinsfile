@@ -9,6 +9,7 @@ pipeline {
     stage('clean') {
       steps {
         deleteDir()
+        sh 'docker stack rm charlacd || exit 0'
       }
     }
     stage('checkout') {
@@ -19,44 +20,81 @@ pipeline {
     stage('Create version') {
       steps {
         sh 'mkdir -p build'
-        sh './gradlew versionTxt'
+        sh './gradlew versionTxt --no-daemon'
+      }
+    }
+    stage('Prep environment'){
+      steps {
+        sh '$(aws ecr get-login --no-include-email)'
       }
     }
     stage('Build') {
       parallel {
         stage('build app') {
           steps {
-            sh './gradlew build docker'
+            sh './gradlew build docker --no-daemon --stacktrace'
+            jacoco()
+            sh 'docker push 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-demo:$(cat ${WORKSPACE}/build/version.txt)'
+          }
+          post {
+            always {
+              junit 'build/test-results/test/*.xml'
+            }
           }
         }
         stage('build nginx-image') {
           steps {
             sh 'cd nginx-build; docker build -t 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:$(cat ${WORKSPACE}/build/version.txt) .'
+            sh 'docker push 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:$(cat ${WORKSPACE}/build/version.txt)'
           }
         }
       }
     }
-    stage('test result') {
-      steps {
-        junit 'build/test-results/test/*.xml'
-      }
-    }
     stage('test startup'){
       steps {
+        sh 'chmod +x ${WORKSPACE}/scripts/remove-service.sh'
         sh '${WORKSPACE}/scripts/deploy.sh dev deploy'
-        sh 'echo wait 50 seconds for server to come up'
-        sh 'sleep 50'
-        sh 'curl http://localhost/actuator/health | grep UP || echo server was not up after 50 seconds, something went wrong; exit 1'
+        sh 'echo wait 2 minutes for server to come up'
+        sh 'sleep 120'
+        sh '''upEndpoint=$(curl http://$(curl http://169.254.169.254/latest/meta-data/local-ipv4)/actuator/health | grep UP || echo failed)
+        ${WORKSPACE}/scripts/remove-service.sh
+        if [[ "$upEndpoint" = "failed" ]]; then
+            echo server was not up after 50 seconds, something went wrong
+            exit 1
+        fi
+        '''
       }
     }
-    stage('deploy a produccion'){
+    stage('deploy to production'){
       when {
         branch 'master'
       }
       steps {
         sh '${WORKSPACE}/scripts/deploy.sh prod deploy'
       }
+      post {
+        failure {
+          mail bcc: '', body: 'Something went wrong and deployment to production failed. Please check the jenkins log and the server', cc: '', from: '', replyTo: '', subject: 'production deployment failed', to: 'chri_ti1991@yahoo.de'
+        }
+      }
     }
+    stage('verify installation'){
+      steps{
+        sh 'sleep 30'
+        sh '''
+        result=curl demo-charla.ctimm.de/math/add?first=5\&second=56
+        if [[ "$result" = "61" ]]; then
+            echo deployment to production was successful
+        else
+            echo production is broken
+            mail bcc: '', body: 'Something went wrong and deployment to production failed. Please check the jenkins log and the server', cc: '', from: '', replyTo: '', subject: 'production deployment failed', to: 'chri_ti1991@yahoo.de'
+            exit 1
+        fi
+        '''
+      }
+    }
+
+
   }
   tools {
     jdk 'jdk8'

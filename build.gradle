@@ -25,6 +25,8 @@ apply plugin: 'io.spring.dependency-management'
 // docker image creation
 apply plugin: 'com.palantir.docker'
 apply plugin: "com.palantir.git-version"
+// code coverage
+apply plugin: 'jacoco'
 
 group = 'de.ctimm'
 version = gitVersion()

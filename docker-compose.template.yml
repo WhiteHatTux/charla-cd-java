@@ -13,6 +13,8 @@ services:
 # access to AWS repository
   web:
     image: 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:latest
+    volumes:
+      - /etc/letsencrypt:/config/ssl
     depends_on:
       - app
     ports:
