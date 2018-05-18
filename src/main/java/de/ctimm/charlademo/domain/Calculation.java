@@ -17,7 +17,7 @@ public class Calculation {
   private Integer first_param;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonIgnore
   private Long id;
 

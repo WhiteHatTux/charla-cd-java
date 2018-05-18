@@ -1,0 +1,19 @@
+version: "3.0"
+services:
+
+  app:
+    image: 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-demo:d3019d1.dirty
+    command: --spring.datasource.url="jdbc:mariadb://REPLACE_DB_HOST:3306/charla" --spring.datasource.password="REPLACE_DB_PASSWORD"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 20s
+      retries: 2
+
+# Here we use the real image. For development purposes this will be overwritten with "nginx-charla:latest", because it won't create problems with
+# access to AWS repository
+  web:
+    image: 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:latest
+    depends_on:
+      - app
+    ports:
+      - 80:80

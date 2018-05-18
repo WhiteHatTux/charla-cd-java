@@ -7,7 +7,7 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="operation" type="varchar(255">
+            <column name="operation" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="first_param" type="bigint">

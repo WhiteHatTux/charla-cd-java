@@ -1,6 +1,13 @@
 version: "3.0"
 services:
 
+  web:
+    image: nginx-charla:latest
+    depends_on:
+      - app
+    ports:
+      - 80:80
+
   db:
     image: mariadb:10.1
     environment:
@@ -10,13 +17,3 @@ services:
       MYSQL_PASSWORD: charlaPassword
     ports:
       - 3306:3306
-
-  app:
-    image: 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-demo:latest
-    restart: always
-
-  web:
-    image: nginx:latest
-    restart: always
-    ports:
-      - 80:80
