@@ -54,14 +54,36 @@ pipeline {
       steps {
         sh 'chmod +x ${WORKSPACE}/scripts/remove-service.sh'
         sh '${WORKSPACE}/scripts/deploy.sh dev deploy'
-        sh 'echo wait 2 minutes for server to come up'
-        sh 'sleep 120'
-        sh '''upEndpoint=$(curl http://$(curl http://169.254.169.254/latest/meta-data/local-ipv4)/actuator/health | grep UP || echo failed)
-        ${WORKSPACE}/scripts/remove-service.sh
-        if [[ "$upEndpoint" = "failed" ]]; then
-            echo server was not up after 50 seconds, something went wrong
-            exit 1
-        fi
+        sh 'echo wait 100 seconds for server to come up'
+        sh 'sleep 100'
+        sh '''
+            count=0
+            healthSuccess=0
+            while [ $count -le 7 ]
+            do
+                count=$(( $count +1 ))
+                sleep 5
+                upEndpoint=$(curl http://$(curl http://169.254.169.254/latest/meta-data/local-ipv4)/actuator/health | grep UP)
+                cat upEndpoint | grep "UP"
+                apisuccess=`echo $?`
+                if [[ $apisuccess -eq 0 ]]; then
+                    healthSuccess=1
+                    ${WORKSPACE}/scripts/remove-service.sh
+                    echo server was not up after 100 seconds, something went wrong
+                    break;
+                fi
+            done;
+            if [ $healthSuccess -eq 1 ]; then
+                echo "server started successfully"
+                ${WORKSPACE}/scripts/remove-service.sh
+            else
+                echo "could not get success on master health"
+                docker service logs charlacd_db
+                docker service logs charlacd_app
+                docker service logs charlacd_web
+                ${WORKSPACE}/scripts/remove-service.sh
+                exit 1
+            fi
         '''
       }
     }
