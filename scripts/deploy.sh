@@ -38,6 +38,8 @@ fi
 # start/upgrade the whole thing
 if [[ "$env" = "prod" ]] ; then
     prod=172.31.29.244
+    # create directory
+    ssh -o StrictHostKeyChecking=no centos@"$prod" 'mkdir -p /home/centos/deploy/'
     # copy docker-compose to prod
     scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose-prod.yml centos@"$prod":/home/centos/deploy/
     # login to aws registry on prod server
