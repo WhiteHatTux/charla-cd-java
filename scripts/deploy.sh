@@ -45,7 +45,7 @@ if [[ "$env" = "prod" ]] ; then
     # login to aws registry on prod server
     ssh -o StrictHostKeyChecking=no centos@"$prod" '$(aws ecr get-login --no-include-email)'
     # run on prod server
-    ssh -o StrictHostKeyChecking=no centos@"$prod" "docker stack deploy --compose-file=/home/centos/deploy/docker-compose.yml --compose-file=/home/centos/deploy/docker-compose-prod.yml charlacd"
+    ssh -o StrictHostKeyChecking=no centos@"$prod" "docker stack deploy --with-registry-auth --compose-file=/home/centos/deploy/docker-compose.yml --compose-file=/home/centos/deploy/docker-compose-prod.yml charlacd"
 elif [[ "$env" = "dev" ]]; then
     pushd ../../nginx-build
         docker build -t nginx-charla:latest .
