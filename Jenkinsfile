@@ -125,7 +125,7 @@ pipeline {
             echo "prod running successfully"
         else
             echo "could not get success on prod health after timeout, please check that. Meanwhile I will rollback"
-                ''' + ${WORKSPACE} + '''/scripts/rollback.sh prod
+                ''' + "${WORKSPACE}" + '''/scripts/rollback.sh prod
             exit 1
         fi
 
