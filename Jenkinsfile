@@ -100,15 +100,41 @@ pipeline {
       }
     }
     stage('verify installation'){
+      when {
+        branch 'master'
+      }
       steps{
         sh 'sleep 30'
         sh '''
+        set +e
+        count=0
+        healthSuccess=0
+        while [ $count -le 20 ]
+        do
+            count=$(( $count +1 ))
+            sleep 5
+            curl -o upEndpoint http://demo-charla.ctimm.de/actuator/health
+            cat upEndpoint | grep "UP"
+            apisuccess=`echo $?`
+            if [[ $apisuccess -eq 0 ]]; then
+                healthSuccess=1
+                break;
+            fi
+        done;
+        if [ $healthSuccess -eq 1 ]; then
+            echo "prod running successfully"
+        else
+            echo "could not get success on prod health after timeout, please check that. Meanwhile I will rollback"
+                ''' + ${WORKSPACE} + '''/scripts/rollback.sh prod
+            exit 1
+        fi
+
+
         result=$(curl "https://demo-charla.ctimm.de/math/add?first=5&second=56")
         if [[ "$result" = "61" ]]; then
             echo deployment to production was successful
         else
             echo production is broken
-            mail bcc: '', body: 'Something went wrong and deployment to production failed. Please check the jenkins log and the server', cc: '', from: '', replyTo: '', subject: 'production deployment failed', to: 'chri_ti1991@yahoo.de'
             exit 1
         fi
         '''
