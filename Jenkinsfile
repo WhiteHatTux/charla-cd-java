@@ -82,7 +82,7 @@ pipeline {
       steps{
         sh 'sleep 30'
         sh '''
-        result=curl demo-charla.ctimm.de/math/add?first=5\&second=56
+        result=$(curl "https://demo-charla.ctimm.de/math/add?first=5&second=56")
         if [[ "$result" = "61" ]]; then
             echo deployment to production was successful
         else
