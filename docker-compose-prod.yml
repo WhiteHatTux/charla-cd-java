@@ -4,7 +4,7 @@ services:
   web:
     image: 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx-ssl:REPLACE_APP_IMAGE
     volumes:
-      - nginx-certs:/etc/letsencrypt/
+      - nginx-certs:/config/ssl/
     depends_on:
       - web_nossl
     ports:
