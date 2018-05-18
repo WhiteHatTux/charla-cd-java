@@ -109,7 +109,7 @@ pipeline {
         set +e
         count=0
         healthSuccess=0
-        while [ $count -le 20 ]
+        while [ $count -le 30 ]
         do
             count=$(( $count +1 ))
             sleep 5
@@ -132,9 +132,9 @@ pipeline {
 
         result=$(curl "https://demo-charla.ctimm.de/math/add?first=5&second=56")
         if [[ "$result" = "61" ]]; then
-            echo deployment to production was successful
+            echo deployment to production was successful Result was $result
         else
-            echo production is broken
+            echo production is broken. Result was $result should have been "61"
             exit 1
         fi
         '''
