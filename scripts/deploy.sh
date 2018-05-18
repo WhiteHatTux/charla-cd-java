@@ -38,7 +38,7 @@ if [[ "$env" = "prod" ]] ; then
     # copy docker-compose to prod
     scp docker-compose.yml centos@"$prod":/home/centos/deploy
     # login to aws registry on prod server
-    ssh centos@"$prod"
+    ssh centos@"$prod" '$(aws ecr get-login --no-include-email)'
     # run on prod server
     ssh centos@"$prod" docker stack deploy --compose-file=/home/centos/deploy/docker-compose.yml charlacd
 elif [[ "$env" = "dev" ]]; then
