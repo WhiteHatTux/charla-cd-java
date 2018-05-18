@@ -1,4 +1,4 @@
-version: "3.0"
+version: "3.4"
 services:
 
   app:
@@ -8,6 +8,13 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 20s
       retries: 3
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        failure_action: rollback
+        monitor: 2m
+        order: start-first
 
 # Here we use the real image. For development purposes this will be overwritten with "nginx-charla:latest", because it won't create problems with
 # access to AWS repository
