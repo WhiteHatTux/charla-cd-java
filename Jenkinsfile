@@ -61,7 +61,7 @@ pipeline {
             do
                 count=$(( $count +1 ))
                 sleep 5
-                upEndpoint=$(curl http://$(curl http://169.254.169.254/latest/meta-data/local-ipv4)/actuator/health | grep UP)
+                curl -o upEndpoint http://$(curl http://169.254.169.254/latest/meta-data/local-ipv4)/actuator/health
                 cat upEndpoint | grep "UP"
                 apisuccess=`echo $?`
                 if [[ $apisuccess -eq 0 ]]; then
