@@ -58,7 +58,7 @@ dependencies {
 docker {
     name "295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-demo:" + jar.version
     files jar.archivePath
-    buildArgs(['JAR_FILE': "${jar.archiveName}",])
+    buildArgs(['JAR_FILE': "${jar.archiveName}",'JAR_VERSION_BUILD': "${jar.version}"])
 }
 
 task versionTxt() {

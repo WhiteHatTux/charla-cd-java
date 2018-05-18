@@ -17,6 +17,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class GreetingsControllerTest {
 
 
+  static {
+    System.setProperty("JAR_VERSION", "test-jar-version");
+  }
+
   @Autowired
   private TestRestTemplate restTemplate;
 
