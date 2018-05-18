@@ -6,16 +6,22 @@ pipeline {
         deleteDir()
       }
     }
-    stage('Build') {
+    stage('Create version'){
       steps {
         sh './gradlew versionTxt'
       }
-      parrallel {
-        steps {
-          sh './gradlew clean build docker'
+    }
+    stage('Build') {
+      parallel {
+        stage ('build app'){
+          steps {
+            sh './gradlew clean build docker'
+          }
         }
-        steps {
-          sh 'cd nginx-build; docker build -t 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:$(cat build/version.txt)'
+        stage ('build nginx-image'){
+          steps {
+            sh 'cd nginx-build; docker build -t 295295069944.dkr.ecr.eu-central-1.amazonaws.com/charla-cd-nginx:$(cat build/version.txt)'
+          }
         }
       }
     }
