@@ -75,13 +75,13 @@ pipeline {
             done;
             if [ $healthSuccess -eq 1 ]; then
                 echo "server started successfully"
-                ${WORKSPACE}/scripts/remove-service.sh
+                ${WORKSPACE}/scripts/remove-service.sh || echo some errors stopping the services
             else
                 echo "could not get success on master health"
                 docker service logs charlacd_db
                 docker service logs charlacd_app
                 docker service logs charlacd_web
-                ${WORKSPACE}/scripts/remove-service.sh
+                ${WORKSPACE}/scripts/remove-service.sh || echo some errors stopping the services
                 exit 1
             fi
         '''
