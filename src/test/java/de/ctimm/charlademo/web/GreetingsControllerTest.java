@@ -29,7 +29,7 @@ public class GreetingsControllerTest {
   public void helloWorld() {
       ResponseEntity<String> result = restTemplate.getForEntity("/", String.class);
 
-      assertTrue(result.getBody().startsWith("Hello"));
+      assertTrue(result.getBody().startsWith("Hola"));
 
   }
 }
