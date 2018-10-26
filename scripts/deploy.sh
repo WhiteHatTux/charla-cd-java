@@ -37,7 +37,7 @@ if [[ ! "$action" = "deploy" ]]; then
 fi
 # start/upgrade the whole thing
 if [[ "$env" = "prod" ]] ; then
-    prod=172.31.29.244
+    prod=172.31.25.85
     # create directory
     ssh -o StrictHostKeyChecking=no centos@"$prod" 'mkdir -p /home/centos/deploy/'
     # copy docker-compose to prod
