@@ -26,6 +26,6 @@ public class GreetingsController {
   @RequestMapping(value = "/", method = RequestMethod.GET)
   public String helloWorld() {
     String hostname = greetingService.calcHostName();
-    return "Hello PUCESA. Este servidor tiene el hostname: " + hostname + ". Corriendo version " + version;
+    return "Hola PUCESA. Este servidor tiene el hostname: " + hostname + ". Corriendo version " + version;
   }
 }
